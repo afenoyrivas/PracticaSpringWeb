@@ -8,9 +8,13 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+
 public class ProductEntity {
 
+    @EqualsAndHashCode.Include
     private long id;
+
     private String name;
     private double price;
     private String description;
