@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class SaleRequest {
+public class SaleRequestDto {
     private Long productId;
     private Long clientId;
     private Long quantity;

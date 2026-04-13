@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-public class SaleResponse {
+public class SaleResponseDto {
     private Long id;
     private ProductEntity products;
     private Long quantity;
