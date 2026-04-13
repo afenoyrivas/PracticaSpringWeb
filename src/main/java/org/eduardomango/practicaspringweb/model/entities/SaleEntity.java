@@ -2,12 +2,7 @@ package org.eduardomango.practicaspringweb.model.entities;
 
 import java.time.LocalDate;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
@@ -15,7 +10,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SaleEntity {
+    @EqualsAndHashCode.Include
     private Long id;
     private ProductEntity products;
     private Long quantity;
