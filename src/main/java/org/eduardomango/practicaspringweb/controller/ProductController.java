@@ -25,14 +25,16 @@ public class ProductController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<ProductEntity>> getAll() {
+    public ResponseEntity<List<ProductResponseDto>> getAll() {
 
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findAll());
+        List<ProductResponseDto> prods= productService.findAll();
+
+        return ResponseEntity.status(HttpStatus.OK).body(prods);
     }
 
 
     @GetMapping
-    public ResponseEntity<ProductEntity> get(@PathVariable Long id) {
+    public ResponseEntity<ProductResponseDto> get(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findById(id));
     }
 
@@ -52,21 +54,21 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductEntity> put(@PathVariable Long id, @RequestBody ProductResponseDto productResponseDto){
-    ProductEntity productEntity=ProductEntity.builder()
-            .name(productResponseDto.getName())
-            .price(productResponseDto.getPrice())
-            .description(productResponseDto.getDescription())
-            .build();
+        ProductEntity productEntity=ProductEntity.builder()
+                .name(productResponseDto.getName())
+                .price(productResponseDto.getPrice())
+                .description(productResponseDto.getDescription())
+                .build();
 
-    productService.update(productEntity);
+        productService.update(productEntity);
 
-    return ResponseEntity.status(HttpStatus.OK).body(productEntity);
+        return ResponseEntity.status(HttpStatus.OK).body(productEntity);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete (@PathVariable Long id){
+    public ResponseEntity<Void> delete (@PathVariable long id){
 
-        productService.delete(productService.findById(id));
+        productService.delete(id);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
