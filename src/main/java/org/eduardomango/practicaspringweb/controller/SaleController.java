@@ -43,7 +43,7 @@ public class SaleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SaleResponseDto> delete(@PathVariable long id){
+    public ResponseEntity<Void> delete(@PathVariable long id){
         saleService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
