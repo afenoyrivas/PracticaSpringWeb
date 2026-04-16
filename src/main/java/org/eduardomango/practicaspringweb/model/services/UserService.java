@@ -5,6 +5,7 @@ import org.eduardomango.practicaspringweb.model.dto.UserRequestDto;
 import org.eduardomango.practicaspringweb.model.dto.UserResponseDto;
 import org.eduardomango.practicaspringweb.model.entities.UserEntity;
 import org.eduardomango.practicaspringweb.model.exceptions.UserNotFoundException;
+import org.eduardomango.practicaspringweb.model.mappers.UserMapper;
 import org.eduardomango.practicaspringweb.model.repositories.IRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,25 +21,6 @@ public class UserService {
 
     public UserService(IRepository<UserEntity> userRepository) {
         this.userRepository = userRepository;
-    }
-
-    ///MAPEO-------------------------------------------------------------------------------------------------------
-
-    public UserEntity requestToEntity(UserRequestDto userRequest){
-        return UserEntity.builder()
-                .id(0L)
-                .username(userRequest.getUsername())
-                .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
-                .build();
-    }
-
-    public UserResponseDto entityToResponse(UserEntity userEntity){
-        return UserResponseDto.builder()
-                .id(userEntity.getId())
-                .username(userEntity.getUsername())
-                .email(userEntity.getEmail())
-                .build();
     }
 
     ///BUSCAR------------------------------------------------------------------------------------------------------
@@ -76,31 +58,31 @@ public class UserService {
     public List<UserResponseDto> getAllDto(){
         List<UserEntity> users = findAll();
         return users.stream()
-                .map(this::entityToResponse)
+                .map(UserMapper::entityToResponse)
                 .collect(Collectors.toList());
     }
 
     public UserResponseDto getDtoById(long id){
         UserEntity entity = findById(id);
-        return entityToResponse(entity);
+        return UserMapper.entityToResponse(entity);
     }
 
     public UserResponseDto getDtoByUsername(String username){
         UserEntity entity = findByUsername(username);
-        return entityToResponse(entity);
+        return UserMapper.entityToResponse(entity);
     }
 
     public UserResponseDto getDtoByEmail(String email){
         UserEntity entity = findByEmail(email);
-        return entityToResponse(entity);
+        return UserMapper.entityToResponse(entity);
     }
 
     ///GUARDAR-----------------------------------------------------------------------------------------------------
 
     public UserResponseDto save(UserRequestDto userRequest) {
-        UserEntity newUser = requestToEntity(userRequest);
+        UserEntity newUser = UserMapper.requestToEntity(userRequest);
         userRepository.save(newUser);
-        return entityToResponse(newUser);
+        return UserMapper.entityToResponse(newUser);
     }
 
     ///ELIMINAR----------------------------------------------------------------------------------------------------
@@ -121,6 +103,6 @@ public class UserService {
 
         userRepository.update(user);
 
-        return entityToResponse(user);
+        return UserMapper.entityToResponse(user);
     }
 }
