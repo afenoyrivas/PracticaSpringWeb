@@ -4,10 +4,7 @@ import org.eduardomango.practicaspringweb.model.dto.ProductRequestDto;
 import org.eduardomango.practicaspringweb.model.dto.ProductResponseDto;
 import org.eduardomango.practicaspringweb.model.entities.ProductEntity;
 import org.eduardomango.practicaspringweb.model.exceptions.ProductNotFoundException;
-import org.eduardomango.practicaspringweb.model.exceptions.UserNotFoundException;
 import org.eduardomango.practicaspringweb.model.repositories.IRepository;
-import org.eduardomango.practicaspringweb.model.repositories.ProductRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,18 +14,43 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final IRepository<ProductEntity> productRepository;
+///  //////////////////////Constructor///////////////////////////////
 
     public ProductService(IRepository<ProductEntity> productRepository) {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponseDto> findAll() {
-        return productRepository.findAll().stream()
+/// ////////////BUSCAR////////////////////////////
+    public List<ProductEntity>findAll(){
+        return productRepository.findAll();
+    }
+    /// ////////////LEER////////////////////////////
+    public List<ProductResponseDto>getAllDtos(){
+        return findAll().stream()
                 .map(this::entityToResponse)
                 .toList();
     }
 
+    public ProductResponseDto getDtoById(long id){
+    ProductEntity entity=findById(id);
+    return entityToResponse(entity);
+    }
+
+    public List<ProductResponseDto>getDtoByName(String name){
+    return findByName(name).stream()
+            .map(this::entityToResponse)
+            .toList();
+    }
+
+    public List<ProductResponseDto>getDtoMoreExpensiveThan(double price ){
+    return findMoreExpensiveThan(price).stream()
+            .map(this::entityToResponse)
+            .toList();
+    }
+
     /// //////////////////////////////MAPEO/////////////////////////////////////////////////////
+
+
     public ProductEntity requestToEntity(ProductRequestDto productResponseDto){
 
         return ProductEntity.builder()
@@ -48,49 +70,38 @@ public class ProductService {
                 .build();
     }
 
-    public ProductEntity responseToEntity(ProductResponseDto productResponseDto){
-        return ProductEntity.builder()
-                .id(productResponseDto.getId())
-                .name(productResponseDto.getName())
-                .price(productResponseDto.getPrice())
-                .description(productResponseDto.getDescription())
-                .build();
-    }
+    /// /////////////////////////////////METODOS DE CLASE////////////////////////////////////////////////////////////
 
-    /// /////////////////////////////////////////////////////////////////////////////////////////////
-    public ProductResponseDto findById(long id) {
-        ProductEntity product = productRepository.findAll()
+
+    public ProductEntity findById(long id) {
+        return  productRepository.findAll()
                 .stream()
                 .filter(p -> p.getId() == id)
                 .findFirst()
                 .orElseThrow(ProductNotFoundException::new);
-        return entityToResponse(product);
     }
 
-    public List<ProductResponseDto> findByName(String name){
-        List<ProductResponseDto> products = productRepository.findAll()
+    public List<ProductEntity> findByName(String name){
+        List<ProductEntity> products= productRepository.findAll()
                 .stream()
                 .filter(user -> user.getName().equalsIgnoreCase(name))
-                .map(this::entityToResponse)
                 .collect(Collectors.toList());
 
         if(products.isEmpty())
         {
             throw new ProductNotFoundException();
         }
-
         return products;
     }
 
 
-    public List<ProductResponseDto> findMoreExpensiveThan(Double price){
-        List<ProductResponseDto> products= productRepository.findAll()
+    public List<ProductEntity> findMoreExpensiveThan(Double price){
+          return productRepository.findAll()
                 .stream()
                 .filter(user -> user.getPrice() > price)
-                .map(this::entityToResponse)
                 .collect(Collectors.toList());
 
-        return products;
+
     }
 
     public void save(ProductEntity p) {
@@ -98,9 +109,8 @@ public class ProductService {
     }
 
     public void delete(long id) {
-        ProductResponseDto responseDto= findById(id);
 
-        ProductEntity entity= responseToEntity(responseDto);
+        ProductEntity entity=findById(id);
 
         productRepository.delete(entity);
     }

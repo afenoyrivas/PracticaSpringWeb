@@ -23,11 +23,11 @@ public class ProductController {
         this.productService = productService;
     }
 
-
+/////////////////////////////////////////////////////////////////////////////////////
     @GetMapping("/{id}")
     public ResponseEntity<List<ProductResponseDto>> getAll() {
 
-        List<ProductResponseDto> prods= productService.findAll();
+        List<ProductResponseDto> prods= productService.getAllDtos();
 
         return ResponseEntity.status(HttpStatus.OK).body(prods);
     }
@@ -35,8 +35,10 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ProductResponseDto> get(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findById(id));
+
+        return ResponseEntity.status(HttpStatus.OK).body(productService.getDtoById(id));
     }
+
 
 
     @PostMapping
